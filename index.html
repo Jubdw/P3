@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<title>Location de vélo</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+    <div id="slider">
+    </div>
+    
+<script src="js/jquery-3.3.1.js"></script>
+<script src="js/slider.js"></script>
+    
+    
+<script>
+    let slideDiv = new Slider();
+    let images = [
+        {url : 'images/kadoc.jpg', alt : 'kadoc', title : 'à kadoc'},
+        {url : 'images/kadoc2.jpg', alt : 'kadoc2', title : 'à kadoc2'},
+        {url : 'images/kadoc3.jpg', alt : 'kadoc3', title : 'à kadoc3'},
+        {url : 'images/kadoc4.jpg', alt : 'kadoc4', title : 'à kadoc4'},
+        {url : 'images/kadoc5.jpg', alt : 'kadoc5', title : 'à kadoc5'},
+        {url : 'images/kadoc6.jpg', alt : 'kadoc6', title : 'à kadoc6'}
+    ]
+    slideDiv.init(slideDiv, images);
+    </script>
+
+    
+</body>
+</html>
