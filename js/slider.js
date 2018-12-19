@@ -39,7 +39,7 @@ class Slider {
             $(slideImg).attr('alt', this.images[i].alt);
             $(slideImg).attr('title', this.images[i].title);
             
-            $(slideCaption).text('à kadoc');
+            $(slideCaption).text(this.images[i].title);
             
             
             $(dot).addClass('dot');
@@ -56,8 +56,7 @@ class Slider {
         this.slides = $('.slide');
         this.dots = $('.dot');
       
-
-        // BOUTONS     
+    
         let aPrev = document.createElement('a');
         aPrev.classList.add('prev');
         aPrev.textContent = '<';
@@ -71,10 +70,7 @@ class Slider {
         aNext.textContent = '>';
         divContainer.appendChild(aNext);
         
-        this.next = $('.next');
-        
-        
-        
+        this.next = $('.next');        
     }
     
     
@@ -94,8 +90,8 @@ class Slider {
             this.plusSlides(1);
         });
     }
-    
-    createEventKeydown() {
+   
+    createEventKeydown() {        
         document.addEventListener('keydown', () => {
             if (event.keyCode === 37) {
                 this.plusSlides(-1);
@@ -105,6 +101,7 @@ class Slider {
             }
         });
     }
+
     
     
     plusSlides(n) {
@@ -136,9 +133,3 @@ class Slider {
         $(this.dots[this.slideIndex]).addClass('active');
     }
 }
-
-var ScrollTop = $("body").scrollTop();
-
-if (ScrollTop > 100) {
-    console.log('oui');
-};

@@ -99,3 +99,12 @@ figcaption {
 }
 
 /* /////// END SLIDER ///// */
+
+#mapleaf {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    height: 800px;
+    max-width: 1200px;
+    left: 50%;
+    transform: translateX(-50%);
+}
