@@ -17,6 +17,7 @@ class Slider {
         this.createEventKeydown();
         this.createEventDot();
         this.showSlides(this.slideIndex);
+        this.createEventAutoPlay();
     }
     
     createContent() {
@@ -55,24 +56,35 @@ class Slider {
         $(divContainer).append(divPagination);
         this.slides = $('.slide');
         this.dots = $('.dot');
+        
       
-    
+    // Boutons  next, prev, stop, play //
+        
         let aPrev = document.createElement('a');
         aPrev.classList.add('prev');
         aPrev.textContent = '<';
-        divContainer.appendChild(aPrev);
-        
+        divContainer.appendChild(aPrev);        
         this.prev = $('.prev');
         
         
         let aNext = document.createElement('a');
         aNext.classList.add('next');
         aNext.textContent = '>';
-        divContainer.appendChild(aNext);
+        divContainer.appendChild(aNext);        
+        this.next = $('.next');
         
-        this.next = $('.next');        
+        
+        let aStop = document.createElement('a');
+        aStop.classList.add('stop');
+        aStop.innerHTML = '&#x25A3;'
+        divContainer.appendChild(aStop);
+        this.stop = $('.stop');
+        
     }
     
+    createEventAutoPlay() {
+        let intervalId = setInterval( () => {this.plusSlides(1);}, 5000);
+    }
     
     createEventDot() {
         for (let i = 0; i < this.dots.length; i++) {
@@ -89,6 +101,9 @@ class Slider {
         this.next.on('click', () => {
             this.plusSlides(1);
         });
+        this.stop.on('click', () => {
+            clearInterval(this.intervalId);
+        });
     }
    
     createEventKeydown() {        
@@ -101,8 +116,6 @@ class Slider {
             }
         });
     }
-
-    
     
     plusSlides(n) {
         this.showSlides(this.slideIndex += n);
