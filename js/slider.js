@@ -2,15 +2,19 @@
 
 class Slider {
     constructor() {
+        this.slideDiv = null;
         this.slideIndex = 0;
         this.slides = null;
         this.dots = null;
         this.prev = null;
         this.next = null;
+        this.stop = null;
         this.images = null;
+        this.intervalId = null;
     }
     
     init(slideDiv, images) {
+        this.slideDiv = slideDiv;
         this.images = images;
         this.createContent();
         this.createEventButton();
@@ -50,8 +54,7 @@ class Slider {
             $(divPagination).append(dot);
             $(divContainer).append(divSlide);
         }
-                
-        $('#slider').append(divContainer);        
+               
         $(this.slideDiv).append(divContainer);
         $(divContainer).append(divPagination);
         this.slides = $('.slide');
@@ -76,20 +79,28 @@ class Slider {
         
         let aStop = document.createElement('a');
         aStop.classList.add('stop');
-        aStop.innerHTML = '&#x25A3;'
+        aStop.innerHTML = '&#x25A3;';
         divContainer.appendChild(aStop);
         this.stop = $('.stop');
+        
+        
+        let aPlay = document.createElement('a');
+        aPlay.classList.add('play');
+        aPlay.innerHTML = '&#x25b7;';
+        divContainer.appendChild(aPlay);
+        this.play = $('.play');
         
     }
     
     createEventAutoPlay() {
-        let intervalId = setInterval( () => {this.plusSlides(1);}, 5000);
+        this.intervalId = setInterval( () => {this.plusSlides(1);}, 2000);
     }
     
     createEventDot() {
         for (let i = 0; i < this.dots.length; i++) {
             this.dots[i].addEventListener('click', () => {
                 this.currentSlide(i);
+                clearInterval(this.intervalId);
             });
         }
     }
@@ -97,22 +108,29 @@ class Slider {
     createEventButton() {
         this.prev.on('click', () => {
             this.plusSlides(-1);
+            clearInterval(this.intervalId);
         });
         this.next.on('click', () => {
             this.plusSlides(1);
+            clearInterval(this.intervalId);
         });
         this.stop.on('click', () => {
             clearInterval(this.intervalId);
         });
+        this.play.on('click', () => {
+            this.createEventAutoPlay();
+        });
     }
-   
+
     createEventKeydown() {        
         document.addEventListener('keydown', () => {
             if (event.keyCode === 37) {
                 this.plusSlides(-1);
+                clearInterval(this.intervalId);
             }
             if (event.keyCode === 39) {
                 this.plusSlides(1);
+                clearInterval(this.intervalId);
             }
         });
     }
@@ -146,3 +164,7 @@ class Slider {
         $(this.dots[this.slideIndex]).addClass('active');
     }
 }
+
+
+
+

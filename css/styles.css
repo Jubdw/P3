@@ -79,7 +79,7 @@ figcaption {
   transition: background-color 0.6s ease;
 }
 
-.stop {
+.stop, .play {
     cursor: pointer;
     position: absolute;
     color: white;
@@ -90,7 +90,11 @@ figcaption {
     transition: 0.6s ease;
 }
 
-.stop:hover {
+.play {
+    left: 60%;
+}
+
+.stop:hover, .play:hover {
     transform: scale(1.5);
 }
 
