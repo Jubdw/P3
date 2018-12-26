@@ -9,6 +9,7 @@ class Slider {
         this.prev = null;
         this.next = null;
         this.stop = null;
+        this.play = null;
         this.images = null;
         this.intervalId = null;
     }
@@ -122,18 +123,30 @@ class Slider {
         });
     }
 
-    createEventKeydown() {        
-        document.addEventListener('keydown', () => {
-            if (event.keyCode === 37) {
-                this.plusSlides(-1);
-                clearInterval(this.intervalId);
-            }
-            if (event.keyCode === 39) {
-                this.plusSlides(1);
-                clearInterval(this.intervalId);
-            }
+    createEventKeydown() {
+        $(window).scroll( () => {
+        let scrollTop = parseInt($(window).scrollTop());
+        console.log(scrollTop);
+        console.log($('#mapleaf').offset());
+        console.log($('#mapleaf').offset().top * 0.8);
+
+        if (scrollTop < ($('#mapleaf').offset().top * 0.8)) {
+            document.addEventListener('keydown', () => {
+                if (event.keyCode === 37) {
+                    this.plusSlides(-1);
+                    clearInterval(this.intervalId);
+                }
+                if (event.keyCode === 39) {
+                    this.plusSlides(1);
+                    clearInterval(this.intervalId);
+                }
+            });
+        } else {
+            return;
+        }
         });
     }
+    
     
     plusSlides(n) {
         this.showSlides(this.slideIndex += n);
@@ -164,7 +177,4 @@ class Slider {
         $(this.dots[this.slideIndex]).addClass('active');
     }
 }
-
-
-
 
