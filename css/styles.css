@@ -124,7 +124,7 @@ figcaption {
 #mapleaf {
     margin-top: 60px;
     margin-bottom: 60px;
-    height: 800px;
+    height: 100vh;
     max-width: 1200px;
     left: 50%;
     transform: translateX(-50%);

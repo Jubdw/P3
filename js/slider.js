@@ -94,7 +94,7 @@ class Slider {
     }
     
     createEventAutoPlay() {
-        this.intervalId = setInterval( () => {this.plusSlides(1);}, 2000);
+        this.intervalId = setInterval( () => {this.plusSlides(1);}, 5000);
     }
     
     createEventDot() {
@@ -124,14 +124,9 @@ class Slider {
     }
 
     createEventKeydown() {
-        $(window).scroll( () => {
-        let scrollTop = parseInt($(window).scrollTop());
-        console.log(scrollTop);
-        console.log($('#mapleaf').offset());
-        console.log($('#mapleaf').offset().top * 0.8);
-
-        if (scrollTop < ($('#mapleaf').offset().top * 0.8)) {
-            document.addEventListener('keydown', () => {
+        document.addEventListener('keydown', (event) => {
+            let scrollTop = parseInt($(window).scrollTop());
+            if (scrollTop < $('#mapleaf').offset().top) {
                 if (event.keyCode === 37) {
                     this.plusSlides(-1);
                     clearInterval(this.intervalId);
@@ -140,10 +135,7 @@ class Slider {
                     this.plusSlides(1);
                     clearInterval(this.intervalId);
                 }
-            });
-        } else {
-            return;
-        }
+            }
         });
     }
     
