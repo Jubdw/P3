@@ -4,40 +4,42 @@
 <meta charset="utf-8" />
 <title>Location de vélo</title>
 <link rel="stylesheet" href="css/styles.css" />
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
    crossorigin=""/>
 </head>
 
 <body>
-    <div id="slider">
+    <div id="slider"></div>
+    
+    <div id="map">
+    <div id="mapleaf"></div>
+    <div id="infostation"></div>
     </div>
     
-    <div id="mapleaf">
-    </div>
-    
-<script src="js/jquery-3.3.1.js"></script>
-<script src="js/slider.js"></script>
-    
-    
-<script>
-    let slider = new Slider();
-    let images = [
-        {url : 'images/vieler1.jpg', alt : 'vieler1', title : 'wouf1'},
-        {url : 'images/vieler2.jpg', alt : 'vieler2', title : 'wouf2'},
-        {url : 'images/vieler3.jpg', alt : 'vieler3', title : 'wouf3'},
-        {url : 'images/vieler4.jpg', alt : 'vieler4', title : 'wouf4'},
-        {url : 'images/vieler5.jpg', alt : 'vieler5', title : 'wouf5'},
-        {url : 'images/vieler6.jpg', alt : 'vieler6', title : 'wouf6'}
-    ]
-    slider.init($('#slider'), images);
-    </script>
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/ajax.js"></script>
+    <script src="js/slider.js"></script>
 
-    
-<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-   crossorigin=""></script>
-<script src="js/map.js"></script>
+
+    <script>
+        let slider = new Slider();
+        let images = [
+            {url : 'images/vieler1.jpg', alt : 'vieler1', title : 'wouf1'},
+            {url : 'images/vieler2.jpg', alt : 'vieler2', title : 'wouf2'},
+            {url : 'images/vieler3.jpg', alt : 'vieler3', title : 'wouf3'},
+            {url : 'images/vieler4.jpg', alt : 'vieler4', title : 'wouf4'},
+            {url : 'images/vieler5.jpg', alt : 'vieler5', title : 'wouf5'},
+            {url : 'images/vieler6.jpg', alt : 'vieler6', title : 'wouf6'}
+        ]
+        slider.init($('#slider'), images);
+        </script>
+
+
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+       integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+       crossorigin=""></script>
+    <script src="js/map.js"></script>
 
 </body>
 </html>

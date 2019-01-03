@@ -66,14 +66,14 @@ class Slider {
         
         let aPrev = document.createElement('a');
         aPrev.classList.add('prev');
-        aPrev.textContent = '<';
+        aPrev.innerHTML = '&#139;';
         divContainer.appendChild(aPrev);        
         this.prev = $('.prev');
         
         
         let aNext = document.createElement('a');
         aNext.classList.add('next');
-        aNext.textContent = '>';
+        aNext.innerHTML = '&#155;';
         divContainer.appendChild(aNext);        
         this.next = $('.next');
         

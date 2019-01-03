@@ -35,7 +35,7 @@ img {
     padding: 16px;
     color: white;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 50px;
     transition: 0.6s ease;
     border-radius: 0 3px 3px 0;
 }
@@ -121,11 +121,41 @@ figcaption {
 
 /* /////// END SLIDER ///// */
 
+#map {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
 #mapleaf {
+    position: absolute;
+    left: 4%;
     margin-top: 60px;
     margin-bottom: 60px;
-    height: 100vh;
-    max-width: 1200px;
-    left: 50%;
-    transform: translateX(-50%);
+    height: 100%;
+    width: 70%;
+    border: 1px solid black;
+    border-radius: 1%;
+}
+
+#infostation {
+    position: absolute;
+    top: 5%;
+    right: 4%;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    height: 90%;
+    width: 20%;
+    border: 1px solid black;
+    border-radius: 2%;
+    background-color: white;
+}
+
+.titre {
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.info {
+    margin-left: 6px;
 }
