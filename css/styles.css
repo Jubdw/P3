@@ -159,3 +159,13 @@ figcaption {
 .info {
     margin-left: 6px;
 }
+
+.form {
+    text-align: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+#resa {
+    display: none;
+}
