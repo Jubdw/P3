@@ -1,9 +1,12 @@
 class ResaMap {
     constructor() {
         this.myMap = null;
-        this.hud = {};
+        this.stations = null;
         this.percent = null;
         this.iconList = null;
+        this.hud = {};
+        this.resaHud = {};
+        this.activeResa = 0;
     }
     
     init() {
@@ -20,41 +23,28 @@ class ResaMap {
         }).addTo(this.myMap);
         
         this.createMarkers();
+        localStorage.clear();
     }
     
     
     chooseIcon() {
-        if (this.percent === 0) {
-            this.iconList = 'images/marker_empty_0.png';
-        }
-        if ((this.percent > 0) && (this.percent < 40)) {
-            this.iconList = 'images/marker_20.png';
-        }
-        if ((this.percent >= 40) && (this.percent < 60)) {
-            this.iconList = 'images/marker_40.png';
-        }
-        if ((this.percent >= 60) && (this.percent < 80)) {
-            this.iconList = 'images/marker_60.png';
-        }
-        if ((this.percent >= 80) && (this.percent < 100)) {
-            this.iconList = 'images/marker_80.png';
-        }
-        if (this.percent === 100) {
-            this.iconList = 'images/marker_100.png';
-        }
+        let allIcons = ['images/marker_empty_0.png', 'images/marker_20.png', 'images/marker_40.png', 'images/marker_60.png', 'images/marker_80.png', 'images/marker_100.png']
+        
+        this.iconList = allIcons[Math.round(this.percent/20)]
     }
     
     
     createMarkers() {
         ajaxGet("https://api.jcdecaux.com/vls/v1/stations?contract=Nantes&apiKey=80bb2b9387f1117e3f540eacf5480c08353b1ba6",(reponse) => {
-            let stations = JSON.parse(reponse);
-            stations.forEach((station) => {
+            this.stations = JSON.parse(reponse);
+            this.stations.forEach((station) => {
                 this.percent = station.available_bikes / station.bike_stands * 100;
                 this.chooseIcon();
                 let myIcon = L.icon({
                     iconUrl: this.iconList,
-                    iconSize: [38,60],
-                    iconAnchor: [19, 5]
+                    iconSize: [32, 50],
+                    iconAnchor: [16, 50],
+                    popupAnchor: [-16, -45]
                 });
                 let marker = L.marker([station.position.lat, station.position.lng], {icon: myIcon}).addTo(this.myMap);
                 let onMarkerClick = (e) => {
@@ -62,24 +52,74 @@ class ResaMap {
                     popup
                         .setLatLng(e.latlng)
                         .setContent("Nom de la station : " + station.name)
-                        .openOn(this.myMap);
-                    this.hud.infoNom.innerHTML = '';
-                    this.hud.infoNom.textContent = 'Nom de la station : ' +station.name;
-                    this.hud.infoAdresse.innerHTML = '';
-                    this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;
-                    this.hud.infoPlace.innerHTML = '';
-                    this.hud.infoPlace.textContent = station.bike_stands + ' places';
-                    this.hud.infoVelo.innerHTML = '';
-                    this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
+                        .openOn(this.myMap);                    
+                    this.hud.infoNom.textContent = 'Nom de la station : ' + station.name;                    
+                    this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;                    
+                    this.hud.infoPlace.textContent = station.bike_stands + ' places';                    
+                    if (station.name === localStorage.nomstation) {
+                        this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';
+                    } else {
+                        this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
+                    }                    
                     $('#resa').css({
                         display : 'block'
                     });
-                };
+                    //  fonction de réservation
+                    let onResaClick = () => {
+                        localStorage.setItem('nomstation', station.name);
+                        localStorage.setItem('velos', station.available_bikes);
+                        if (this.activeResa === 0) {
+                            this.submitResa();
+                            localStorage.setItem('reservation', this.activeResa);
+                        } else {
+                            console.log('Une réservation a déjà été effectuée. Une nouvelle réservation va annuler la précédente.');
+                            localStorage.clear();
+                            this.activeResa--;
+                            localStorage.setItem('nomstation', station.name);
+                            localStorage.setItem('velos', station.available_bikes);
+                            this.submitResa();
+                            localStorage.setItem('reservation', this.activeResa);
+                        }
+                        
+                        console.log(localStorage);
+                        
+                    };
+                    
+                    $(this.hud.inputSubmit).on('click', onResaClick);
+                    
+                }
+                
                 marker.on('click', onMarkerClick);
             });
         });
         this.createHUD();
+    }    
+    
+    submitResa() {
+        this.sauvegarde();
+
+        localStorage.velos -= 1;
+        
+        this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';   
+        
+        this.resaHud.resaTitre.textContent = 'Réservation validée :';
+        
+        this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + localStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
+        
+        this.resaHud.resaTimer.textContent = 'Temps restant : ';
+
+        $(this.resaHud.infoResa).css({
+            display: 'block'
+        });
+
+        this.activeResa++;            
     }
+
+    sauvegarde() {
+        localStorage.setItem('nom', document.getElementById('nom').value);
+        localStorage.setItem('prenom', document.getElementById('prenom').value);
+    }
+    
     
     createHUD() {
         this.hud.infoStation = $('#infostation');
@@ -109,12 +149,10 @@ class ResaMap {
         this.hud.reservation.id = "resa";
         
         this.hud.form = document.createElement('form');
-        this.hud.form.method = "POST";
-        this.hud.form.action = "bonjour.php"
+        
         
         this.hud.inputNom = document.createElement('input');
         this.hud.inputNom.type = "text";
-        this.hud.inputNom.name = "nom";
         this.hud.inputNom.id = "nom";
         this.hud.labelNom = document.createElement('label');
         this.hud.labelNom.htmlFor = "nom";
@@ -127,7 +165,6 @@ class ResaMap {
         
         this.hud.inputPrenom = document.createElement('input');
         this.hud.inputPrenom.type = "text";
-        this.hud.inputPrenom.name = "prenom";
         this.hud.inputPrenom.id = "prenom";
         this.hud.labelPrenom = document.createElement('label');
         this.hud.labelPrenom.htmlFor = "prenom";
@@ -138,12 +175,81 @@ class ResaMap {
         this.hud.sautLigne = document.createElement('br');
         $(this.hud.sautLigne).appendTo(this.hud.form);
         
+        this.hud.signature = document.createElement('canvas');
+        this.hud.signature.id = "signature";
+        this.hud.signature.width = "200";
+        this.hud.signature.height = "120";
+        $(this.hud.signature).appendTo(this.hud.form);
+        
+        this.hud.sautLigne = document.createElement('br');
+        $(this.hud.sautLigne).appendTo(this.hud.form);
+        
         this.hud.inputSubmit = document.createElement('input');
-        this.hud.inputSubmit.type = "submit";
+        this.hud.inputSubmit.type = "button";
         this.hud.inputSubmit.value = "Réserver";
         $(this.hud.inputSubmit).appendTo(this.hud.form).addClass('form');
         
         $(this.hud.form).appendTo(this.hud.reservation).addClass('form');
         $(this.hud.reservation).appendTo(this.hud.infoStation).addClass('form');
+        
+        this.createSignature();
+        this.createResaHud();
     }
+    
+    createSignature() {
+        let sCanvas = document.getElementById('signature');
+        let painting = false;
+        let started = false;
+        let cursorX, cursorY;
+        let context = sCanvas.getContext('2d');
+        
+        context.lineJoin = 'round';
+        context.lineCap = 'round';
+        
+        sCanvas.onmousedown = (e) => {
+            painting = true;
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+            console.log(cursorX);
+        }
+        
+        sCanvas.onmouseup = (e) => {
+            painting = false;
+            started = false;
+        }
+        
+        sCanvas.onmousemove = (e) => {
+            if (painting) {
+                cursorX = e.clientX;
+                cursorY = e.clientY;
+                context.beginPath();
+                context.moveTo(cursorX, cursorY);
+                context.lineTo(cursorX, cursorY);
+                context.strokeStyle = 'black';
+                context.lineWidth = 5;
+                context.stroke();
+                }
+            }
+        
+    }
+    
+    
+    createResaHud() {
+        this.resaHud.infoResa = $('#inforesa');
+        
+        this.resaHud.resaTitre = document.createElement('p');
+        $(this.resaHud.resaTitre).appendTo(this.resaHud.infoResa).addClass('titre');
+        
+        this.resaHud.resaData = document.createElement('p');
+        $(this.resaHud.resaData).appendTo(this.resaHud.infoResa).addClass('info');
+        
+        this.resaHud.resaTimer = document.createElement('p');
+        $(this.resaHud.resaTimer).appendTo(this.resaHud.infoResa).addClass('info');
+        
+        this.resaHud.resaChrono = document.createElement('span');
+        $(this.resaHud.resaChrono).appendTo(this.resaHud.infoResa).addClass('titre');
+    }
+    
+    
+    
 }

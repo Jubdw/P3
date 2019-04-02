@@ -122,6 +122,7 @@ figcaption {
 /* /////// END SLIDER ///// */
 
 #map {
+    margin-top: 20px;
     width: 100%;
     height: 100vh;
     position: relative;
@@ -130,9 +131,9 @@ figcaption {
 #mapleaf {
     position: absolute;
     left: 4%;
-    margin-top: 60px;
-    margin-bottom: 60px;
-    height: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 75%;
     width: 70%;
     border: 1px solid black;
     border-radius: 1%;
@@ -140,11 +141,10 @@ figcaption {
 
 #infostation {
     position: absolute;
-    top: 5%;
     right: 4%;
-    margin-top: 60px;
-    margin-bottom: 60px;
-    height: 90%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 75%;
     width: 20%;
     border: 1px solid black;
     border-radius: 2%;
@@ -166,6 +166,24 @@ figcaption {
     margin-bottom: 4px;
 }
 
+#signature {
+    border: 1px solid black;
+}
+
 #resa {
     display: none;
+}
+
+#inforesa {
+    display: none;
+    position: absolute;
+    bottom: 1%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 20%;
+    width: 80%;
+    border: 1px solid black;
+    border-radius: 2%;
+    background-color: white;
+    text-align: center;
 }
