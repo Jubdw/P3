@@ -219,15 +219,21 @@ class ResaMap {
         }
         
         sCanvas.onmousemove = (e) => {
-            if (painting) {
+            if (painting === true) {
                 cursorX = e.clientX;
                 cursorY = e.clientY;
-                context.beginPath();
-                context.moveTo(cursorX, cursorY);
-                context.lineTo(cursorX, cursorY);
-                context.strokeStyle = 'black';
-                context.lineWidth = 5;
-                context.stroke();
+                if (!started) {
+                    context.beginPath();
+                    context.moveTo(cursorX, cursorY);
+                    started = true;
+                }
+                else {
+                    context.lineTo(cursorX, cursorY);
+                    context.strokeStyle = 'black';
+                    context.lineWidth = 5;
+                    context.stroke();
+                    context.closePath();
+                }     
                 }
             }
         
