@@ -132,10 +132,10 @@ class ResaMap {
                             display: 'none'
                         });
                 }, 10000);
-            }            
+            }
+            this.resaHud.resaTimer.textContent = 'Temps restant : ' + this.resaHud.compteurMin.textContent + ' minutes ' + this.resaHud.compteurSec.textContent + ' secondes.';
         }        
         let intervalId = setInterval(diminuerCompteur, 1000);
-        this.resaHud.resaTimer.textContent = 'Temps restant : ' + this.resaHud.compteurMin.textContent + ' minutes ' + this.resaHud.compteurSec.textContent + ' secondes.';
     }
     
     
