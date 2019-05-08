@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <title>Location de vélo</title>
-<link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
    crossorigin=""/>
+<link rel="stylesheet" href="css/styles.css" />
+
 </head>
 
 <body>
@@ -16,7 +17,6 @@
     <div id="mapleaf"></div>
     <div id="infostation"></div>
     <div id="inforesa"></div>
-    <div id="sign"></div>
     </div>
     
     <script src="js/jquery-3.3.1.js"></script>
@@ -50,8 +50,7 @@
     </script>
     
     <script>
-        let signature = new ResaCanvas();
-        signature.init();
+        let signature = new ResaCanvas();        
     </script>
 
 </body>

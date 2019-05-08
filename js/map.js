@@ -105,15 +105,37 @@ class ResaMap {
         this.resaHud.resaTitre.textContent = 'Réservation validée :';
         
         this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + localStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
-        
-        this.resaHud.resaTimer.textContent = 'Temps restant : ' +  + ' minutes ' +  + ' secondes.';
 
         $(this.resaHud.infoResa).css({
             display: 'block'
         });
 
         this.activeResa++;
+        this.startChrono();
         
+    }
+    
+    startChrono() {        
+        let diminuerCompteur = () => {            
+            if (this.resaHud.compteurSec.textContent > 1) {
+                this.resaHud.compteurSec.textContent--;
+            }
+            if (this.resaHud.compteurSec.textContent < 1) {
+                this.resaHud.compteurSec.textContent = 59;
+                this.resaHud.compteurMin.textContent--;
+            }
+            if ((this.resaHud.compteurMin.textContent === 0) && (this.resaHud.compteurSec.textContent === 1)) {
+                this.resaHud.resaTimer.textContent = 'Fin de la réservation. Le vélo est à nouveau disponible à la station.';
+                clearInterval(intervalId);
+                setTimeout( () => {
+                    $(this.resaHud.infoResa).css({
+                            display: 'none'
+                        });
+                }, 10000);
+            }            
+        }        
+        let intervalId = setInterval(diminuerCompteur, 1000);
+        this.resaHud.resaTimer.textContent = 'Temps restant : ' + this.resaHud.compteurMin.textContent + ' minutes ' + this.resaHud.compteurSec.textContent + ' secondes.';
     }
     
     
@@ -201,7 +223,13 @@ class ResaMap {
         this.resaHud.resaTimer = document.createElement('p');
         $(this.resaHud.resaTimer).appendTo(this.resaHud.infoResa).addClass('info');
         
+        this.resaHud.compteurMin = document.createElement('p');
+        this.resaHud.compteurMin.textContent = 20;
+        $(this.resaHud.compteurMin).appendTo(this.resaHud.infoResa).addClass('compt');
         
+        this.resaHud.compteurSec = document.createElement('p');
+        this.resaHud.compteurSec.textContent = 0;
+        $(this.resaHud.compteurSec).appendTo(this.resaHud.infoResa).addClass('compt');
     }
     
     
