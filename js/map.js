@@ -106,21 +106,22 @@ class ResaMap {
         
         this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + localStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
         
-        this.resaHud.resaTimer.textContent = 'Temps restant : ';
+        this.resaHud.resaTimer.textContent = 'Temps restant : ' +  + ' minutes ' +  + ' secondes.';
 
         $(this.resaHud.infoResa).css({
             display: 'block'
         });
 
-        this.activeResa++;            
+        this.activeResa++;
+        
     }
-
+    
+    
     sauvegarde() {
         localStorage.setItem('nom', document.getElementById('nom').value);
         localStorage.setItem('prenom', document.getElementById('prenom').value);
     }
-    
-    
+        
     createHUD() {
         this.hud.infoStation = $('#infostation');
 
@@ -172,14 +173,6 @@ class ResaMap {
         $(this.hud.labelPrenom).appendTo(this.hud.form).addClass('form');
         $(this.hud.inputPrenom).appendTo(this.hud.form).addClass('form');
         
-        this.hud.sautLigne = document.createElement('br');
-        $(this.hud.sautLigne).appendTo(this.hud.form);
-        
-        this.hud.signature = document.createElement('canvas');
-        this.hud.signature.id = "signature";
-        this.hud.signature.width = "200";
-        this.hud.signature.height = "120";
-        $(this.hud.signature).appendTo(this.hud.form);
         
         this.hud.sautLigne = document.createElement('br');
         $(this.hud.sautLigne).appendTo(this.hud.form);
@@ -192,51 +185,7 @@ class ResaMap {
         $(this.hud.form).appendTo(this.hud.reservation).addClass('form');
         $(this.hud.reservation).appendTo(this.hud.infoStation).addClass('form');
         
-        this.createSignature();
         this.createResaHud();
-    }
-    
-    createSignature() {
-        let sCanvas = document.getElementById('signature');
-        let painting = false;
-        let started = false;
-        let cursorX, cursorY;
-        let context = sCanvas.getContext('2d');
-        
-        context.lineJoin = 'round';
-        context.lineCap = 'round';
-        
-        sCanvas.onmousedown = (e) => {
-            painting = true;
-            cursorX = e.clientX;
-            cursorY = e.clientY;
-            console.log(cursorX);
-        }
-        
-        sCanvas.onmouseup = (e) => {
-            painting = false;
-            started = false;
-        }
-        
-        sCanvas.onmousemove = (e) => {
-            if (painting === true) {
-                cursorX = e.clientX;
-                cursorY = e.clientY;
-                if (!started) {
-                    context.beginPath();
-                    context.moveTo(cursorX, cursorY);
-                    started = true;
-                }
-                else {
-                    context.lineTo(cursorX, cursorY);
-                    context.strokeStyle = 'black';
-                    context.lineWidth = 5;
-                    context.stroke();
-                    context.closePath();
-                }     
-                }
-            }
-        
     }
     
     
@@ -252,8 +201,7 @@ class ResaMap {
         this.resaHud.resaTimer = document.createElement('p');
         $(this.resaHud.resaTimer).appendTo(this.resaHud.infoResa).addClass('info');
         
-        this.resaHud.resaChrono = document.createElement('span');
-        $(this.resaHud.resaChrono).appendTo(this.resaHud.infoResa).addClass('titre');
+        
     }
     
     
