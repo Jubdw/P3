@@ -64,11 +64,14 @@ class ResaMap {
                     $('#resa').css({
                         display : 'block'
                     });
-                    //  fonction de réservation
+
                     let onResaClick = () => {
                         localStorage.setItem('nomstation', station.name);
                         localStorage.setItem('velos', station.available_bikes);
-                        if (this.activeResa === 0) {
+                        if (localStorage.velos === 0) {
+                            console.log('Aucun vélo disponible. Réservation impossible');
+                            
+                        } else if (this.activeResa === 0) {
                             this.submitResa();
                             localStorage.setItem('reservation', this.activeResa);
                         } else {
@@ -115,16 +118,20 @@ class ResaMap {
         
     }
     
-    startChrono() {        
-        let diminuerCompteur = () => {            
-            if (this.resaHud.compteurSec.textContent > 1) {
-                this.resaHud.compteurSec.textContent--;
+    startChrono() {
+        let timerMinute = 20;
+        let timerSeconde = 0;
+        
+        let diminuerCompteur = () => {
+            this.resaHud.resaTimer.textContent = 'Temps restant : ' + timerMinute + ' minute(s) ' + timerSeconde + ' seconde(s).';
+            if (timerSeconde >= 0) {
+                timerSeconde--;
             }
-            if (this.resaHud.compteurSec.textContent < 1) {
-                this.resaHud.compteurSec.textContent = 59;
-                this.resaHud.compteurMin.textContent--;
+            if (timerSeconde < 0) {
+                timerMinute--;
+                timerSeconde = 59;
             }
-            if ((this.resaHud.compteurMin.textContent === 0) && (this.resaHud.compteurSec.textContent === 1)) {
+            if ((timerMinute === 0) && (timerSeconde === 0)) {
                 this.resaHud.resaTimer.textContent = 'Fin de la réservation. Le vélo est à nouveau disponible à la station.';
                 clearInterval(intervalId);
                 setTimeout( () => {
@@ -132,10 +139,12 @@ class ResaMap {
                             display: 'none'
                         });
                 }, 10000);
+                localStorage.clear;
             }
-            this.resaHud.resaTimer.textContent = 'Temps restant : ' + this.resaHud.compteurMin.textContent + ' minutes ' + this.resaHud.compteurSec.textContent + ' secondes.';
-        }        
+        }
+        
         let intervalId = setInterval(diminuerCompteur, 1000);
+        
     }
     
     
@@ -222,16 +231,5 @@ class ResaMap {
         
         this.resaHud.resaTimer = document.createElement('p');
         $(this.resaHud.resaTimer).appendTo(this.resaHud.infoResa).addClass('info');
-        
-        this.resaHud.compteurMin = document.createElement('p');
-        this.resaHud.compteurMin.textContent = 20;
-        $(this.resaHud.compteurMin).appendTo(this.resaHud.infoResa).addClass('compt');
-        
-        this.resaHud.compteurSec = document.createElement('p');
-        this.resaHud.compteurSec.textContent = 0;
-        $(this.resaHud.compteurSec).appendTo(this.resaHud.infoResa).addClass('compt');
-    }
-    
-    
-    
+    }  
 }
