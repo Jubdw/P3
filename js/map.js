@@ -7,6 +7,7 @@ class ResaMap {
         this.hud = {};
         this.resaHud = {};
         this.activeResa = 0;
+        this.intervalId = null;
     }
     
     init() {
@@ -68,24 +69,21 @@ class ResaMap {
                     let onResaClick = () => {
                         localStorage.setItem('nomstation', station.name);
                         localStorage.setItem('velos', station.available_bikes);
-                        if (localStorage.velos === 0) {
-                            console.log('Aucun vélo disponible. Réservation impossible');
-                            
+                        if (localStorage.velos === 0){
+                            console.log('Aucun vélo disponible, réservation impossible.');
                         } else if (this.activeResa === 0) {
                             this.submitResa();
-                            localStorage.setItem('reservation', this.activeResa);
                         } else {
                             console.log('Une réservation a déjà été effectuée. Une nouvelle réservation va annuler la précédente.');
+                            clearInterval(this.intervalId);
                             localStorage.clear();
                             this.activeResa--;
                             localStorage.setItem('nomstation', station.name);
                             localStorage.setItem('velos', station.available_bikes);
                             this.submitResa();
-                            localStorage.setItem('reservation', this.activeResa);
                         }
                         
-                        console.log(localStorage);
-                        
+                        console.log(localStorage);                        
                     };
                     
                     $(this.hud.inputSubmit).on('click', onResaClick);
@@ -133,7 +131,7 @@ class ResaMap {
             }
             if ((timerMinute === 0) && (timerSeconde === 0)) {
                 this.resaHud.resaTimer.textContent = 'Fin de la réservation. Le vélo est à nouveau disponible à la station.';
-                clearInterval(intervalId);
+                clearInterval(this.intervalId);
                 setTimeout( () => {
                     $(this.resaHud.infoResa).css({
                             display: 'none'
@@ -143,7 +141,7 @@ class ResaMap {
             }
         }
         
-        let intervalId = setInterval(diminuerCompteur, 1000);
+        this.intervalId = setInterval(diminuerCompteur, 1000);
         
     }
     
