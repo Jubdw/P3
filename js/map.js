@@ -24,7 +24,6 @@ class ResaMap {
         }).addTo(this.myMap);
         
         this.createMarkers();
-        localStorage.clear();
     }
     
     
@@ -53,7 +52,8 @@ class ResaMap {
                     popup
                         .setLatLng(e.latlng)
                         .setContent("Nom de la station : " + station.name)
-                        .openOn(this.myMap);                    
+                        .openOn(this.myMap);
+                    
                     this.hud.infoNom.textContent = 'Nom de la station : ' + station.name;                    
                     this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;                    
                     this.hud.infoPlace.textContent = station.bike_stands + ' places';                    
@@ -65,14 +65,18 @@ class ResaMap {
                     $('#resa').css({
                         display : 'block'
                     });
-
                     let onResaClick = () => {
-                        localStorage.setItem('nomstation', station.name);
-                        localStorage.setItem('velos', station.available_bikes);
-                        if (localStorage.velos === 0){
+                                                
+                        if (station.available_bikes === 0){
+                            this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
                             console.log('Aucun vélo disponible, réservation impossible.');
                         } else if (this.activeResa === 0) {
+                            localStorage.setItem('nomstation', station.name);
+                            localStorage.setItem('velos', station.available_bikes);
                             this.submitResa();
+                        } else if ((this.activeResa === 1) && (station.name === localStorage.nomstation)) {
+                            console.log('Réservation déjà validée à cette station.');
+                            this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';
                         } else {
                             console.log('Une réservation a déjà été effectuée. Une nouvelle réservation va annuler la précédente.');
                             clearInterval(this.intervalId);
@@ -82,16 +86,14 @@ class ResaMap {
                             localStorage.setItem('velos', station.available_bikes);
                             this.submitResa();
                         }
-                        
-                        console.log(localStorage);                        
+                        console.log(localStorage);
                     };
-                    
                     $(this.hud.inputSubmit).on('click', onResaClick);
-                    
                 }
                 
-                marker.on('click', onMarkerClick);
+                marker.on('click', onMarkerClick);                
             });
+            
         });
         this.createHUD();
     }    
