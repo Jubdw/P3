@@ -22,17 +22,14 @@ class ResaMap {
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1IjoianVsaWVuYmFycmUiLCJhIjoiY2pwdjdoM3o2MGRhdzN4czRmZW5ycTZuMSJ9.yILbOpuKdhUGZDaLt3PbDg'
         }).addTo(this.myMap);
-        
+        this.checkResa();
         this.createMarkers();
     }
     
-    
     chooseIcon() {
         let allIcons = ['images/marker_empty_0.png', 'images/marker_20.png', 'images/marker_40.png', 'images/marker_60.png', 'images/marker_80.png', 'images/marker_100.png']
-        
         this.iconList = allIcons[Math.round(this.percent/20)]
     }
-    
     
     createMarkers() {
         ajaxGet("https://api.jcdecaux.com/vls/v1/stations?contract=Nantes&apiKey=80bb2b9387f1117e3f540eacf5480c08353b1ba6",(reponse) => {
@@ -53,7 +50,6 @@ class ResaMap {
                         .setLatLng(e.latlng)
                         .setContent("Nom de la station : " + station.name)
                         .openOn(this.myMap);
-                    
                     this.hud.infoNom.textContent = 'Nom de la station : ' + station.name;                    
                     this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;                    
                     this.hud.infoPlace.textContent = station.bike_stands + ' places';                    
@@ -66,62 +62,51 @@ class ResaMap {
                         display : 'block'
                     });
                     let onResaClick = () => {
-                                                
                         if (station.available_bikes === 0){
                             this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
                             console.log('Aucun vélo disponible, réservation impossible.');
-                        } else if (this.activeResa === 0) {
-                            localStorage.setItem('nomstation', station.name);
-                            localStorage.setItem('velos', station.available_bikes);
-                            this.submitResa();
-                        } else if ((this.activeResa === 1) && (station.name === localStorage.nomstation)) {
-                            console.log('Réservation déjà validée à cette station.');
-                            this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';
                         } else {
-                            console.log('Une réservation a déjà été effectuée. Une nouvelle réservation va annuler la précédente.');
-                            clearInterval(this.intervalId);
-                            localStorage.clear();
-                            this.activeResa--;
                             localStorage.setItem('nomstation', station.name);
                             localStorage.setItem('velos', station.available_bikes);
                             this.submitResa();
+                            $(this.hud.inputSubmit).css({
+                                display : 'none'
+                            });
+                            $(this.resaHud.inputCancel).css({
+                                display : 'block'
+                            });
                         }
                         console.log(localStorage);
                     };
                     $(this.hud.inputSubmit).on('click', onResaClick);
                 }
-                
                 marker.on('click', onMarkerClick);                
             });
-            
         });
         this.createHUD();
     }    
     
     submitResa() {
         this.sauvegarde();
-
         localStorage.velos -= 1;
-        
-        this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';   
-        
-        this.resaHud.resaTitre.textContent = 'Réservation validée :';
-        
+        this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';
         this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + localStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
-
         $(this.resaHud.infoResa).css({
             display: 'block'
         });
-
-        this.activeResa++;
         this.startChrono();
-        
+    }
+    
+    sauvegarde() {
+        this.activeResa++;
+        localStorage.setItem('reservation', this.activeResa);
+        localStorage.setItem('nom', document.getElementById('nom').value);
+        localStorage.setItem('prenom', document.getElementById('prenom').value);
     }
     
     startChrono() {
         let timerMinute = 20;
         let timerSeconde = 0;
-        
         let diminuerCompteur = () => {
             this.resaHud.resaTimer.textContent = 'Temps restant : ' + timerMinute + ' minute(s) ' + timerSeconde + ' seconde(s).';
             if (timerSeconde >= 0) {
@@ -142,15 +127,19 @@ class ResaMap {
                 localStorage.clear;
             }
         }
-        
         this.intervalId = setInterval(diminuerCompteur, 1000);
-        
     }
     
-    
-    sauvegarde() {
-        localStorage.setItem('nom', document.getElementById('nom').value);
-        localStorage.setItem('prenom', document.getElementById('prenom').value);
+    checkResa() {
+        if (localStorage.reservation === 1) {
+            $(this.resaHud.infoResa).css({
+                display: 'block'
+            });
+        } else {
+            $(this.resaHud.infoResa).css({
+                display: 'none'
+            });
+        }
     }
         
     createHUD() {
@@ -172,7 +161,6 @@ class ResaMap {
         this.hud.infoVelo = document.createElement('p');
         $(this.hud.infoVelo).appendTo(this.hud.infoStation).addClass('info');
         
-        
         this.hud.infoResa = document.createElement('p');
         this.hud.infoResa.textContent = 'Réservez un vélo :';
         $(this.hud.infoResa).appendTo(this.hud.infoStation).addClass('titre');
@@ -181,7 +169,6 @@ class ResaMap {
         this.hud.reservation.id = "resa";
         
         this.hud.form = document.createElement('form');
-        
         
         this.hud.inputNom = document.createElement('input');
         this.hud.inputNom.type = "text";
@@ -204,13 +191,13 @@ class ResaMap {
         $(this.hud.labelPrenom).appendTo(this.hud.form).addClass('form');
         $(this.hud.inputPrenom).appendTo(this.hud.form).addClass('form');
         
-        
         this.hud.sautLigne = document.createElement('br');
         $(this.hud.sautLigne).appendTo(this.hud.form);
         
         this.hud.inputSubmit = document.createElement('input');
         this.hud.inputSubmit.type = "button";
         this.hud.inputSubmit.value = "Réserver";
+        this.hud.inputSubmit.id = "reserver";
         $(this.hud.inputSubmit).appendTo(this.hud.form).addClass('form');
         
         $(this.hud.form).appendTo(this.hud.reservation).addClass('form');
@@ -219,11 +206,11 @@ class ResaMap {
         this.createResaHud();
     }
     
-    
     createResaHud() {
         this.resaHud.infoResa = $('#inforesa');
         
         this.resaHud.resaTitre = document.createElement('p');
+        this.resaHud.resaTitre.textContent = 'Réservation validée :';
         $(this.resaHud.resaTitre).appendTo(this.resaHud.infoResa).addClass('titre');
         
         this.resaHud.resaData = document.createElement('p');
@@ -231,5 +218,16 @@ class ResaMap {
         
         this.resaHud.resaTimer = document.createElement('p');
         $(this.resaHud.resaTimer).appendTo(this.resaHud.infoResa).addClass('info');
+        
+        this.resaHud.inputCancel = document.createElement('input');
+        this.resaHud.inputCancel.type = "button";
+        this.resaHud.inputCancel.value = "Annuler";
+        $(this.resaHud.inputCancel).appendTo(this.resaHud.infoResa).addClass('cancel');
+        
+        let onCancelClick = () => {
+            localStorage.clear();
+            document.location.reload(true);
+        }
+        $(this.resaHud.inputCancel).on('click', onCancelClick);
     }  
 }

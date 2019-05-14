@@ -191,3 +191,14 @@ figcaption {
     background-color: white;
     text-align: center;
 }
+
+#reserver {
+    cursor: pointer;
+}
+.cancel {
+    cursor: pointer;
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+}
