@@ -1,5 +1,3 @@
-// Elle est bien cachée ?
-
 class Slider {
     constructor() {
         this.slideDiv = null;

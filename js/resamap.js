@@ -1,16 +1,12 @@
 class ResaMap {
     constructor() {
         this.myMap = null;
-        this.stations = null;
         this.percent = null;
         this.iconList = null;
         this.hud = {};
         this.resaHud = {};
         this.activeResa = 0;
         this.intervalId = null;
-    }
-    
-    init() {
         this.myMap = L.map('mapleaf').setView([47.214547, -1.552943], 15);
         this.createContent();
     }
@@ -31,34 +27,33 @@ class ResaMap {
     }
     
     createMarkers() {
-        ajaxGet("https://api.jcdecaux.com/vls/v1/stations?contract=Nantes&apiKey=80bb2b9387f1117e3f540eacf5480c08353b1ba6",(reponse) => {
-            this.stations = JSON.parse(reponse);
-            this.stations.forEach((station) => {
-                this.percent = station.available_bikes / station.bike_stands * 100;
-                this.chooseIcon();
-                let myIcon = L.icon({
-                    iconUrl: this.iconList,
-                    iconSize: [32, 50],
-                    iconAnchor: [16, 50],
-                    popupAnchor: [-16, -45]
-                });
-                let marker = L.marker([station.position.lat, station.position.lng], {icon: myIcon}).addTo(this.myMap);
-                let onMarkerClick = (e) => {
-                    let popup = L.popup();
-                    popup
-                        .setLatLng(e.latlng)
-                        .setContent("Nom de la station : " + station.name)
-                        .openOn(this.myMap);
-                    this.hud.infoNom.textContent = 'Nom de la station : ' + station.name;                    
-                    this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;                    
-                    this.hud.infoPlace.textContent = station.bike_stands + ' places';
-                    this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
-                    $('#resa').css({
-                        display : 'block'
-                    });
-                }
-                marker.on('click', onMarkerClick);                
+        stations.forEach((station) => {
+            this.percent = station.available_bikes / station.bike_stands * 100;
+            this.chooseIcon();
+            let myIcon = L.icon({
+                iconUrl: this.iconList,
+                iconSize: [32, 50],
+                iconAnchor: [16, 50],
+                popupAnchor: [-16, -45]
             });
+            let marker = L.marker([station.position.lat, station.position.lng], {icon: myIcon}).addTo(this.myMap);
+            let onMarkerClick = (e) => {
+                let popup = L.popup();
+                popup
+                    .setLatLng(e.latlng)
+                    .setContent("Nom de la station : " + station.name)
+                    .openOn(this.myMap);
+                this.hud.infoNom.textContent = 'Nom de la station : ' + station.name;                    
+                this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;                    
+                this.hud.infoPlace.textContent = station.bike_stands + ' places';
+                this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
+                sessionStorage.setItem('nomstation', station.name);
+                sessionStorage.setItem('velos', station.available_bikes);
+                $('#resa').css({
+                    display : 'block'
+                });
+            }
+            marker.on('click', onMarkerClick);
         });
         this.createHUD();
         this.reserver();
@@ -66,12 +61,10 @@ class ResaMap {
     
     reserver() {
         let onResaClick = () => {
-            if (station.available_bikes === 0){
-                this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
+            if (sessionStorage.velos === 0){
+                this.hud.infoVelo.textContent = sessionStorage.velos + ' vélos disponibles';
                 alert('Aucun vélo disponible, réservation impossible.');
             } else {
-                sessionStorage.setItem('nomstation', station.name);
-                sessionStorage.setItem('velos', station.available_bikes);
                 this.submitResa();
                 $(this.hud.inputSubmit).css({
                     display : 'none'
@@ -241,8 +234,9 @@ class ResaMap {
         
         let onCancelClick = () => {
             this.activeResa--;
+            sessionStorage.velos++;
+            this.hud.infoVelo.textContent = sessionStorage.velos + ' vélos disponibles';
             localStorage.clear();
-            sessionStorage.clear();
             clearInterval(this.intervalId);
             $(this.resaHud.infoResa).css({
                 display: 'none'
