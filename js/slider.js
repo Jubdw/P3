@@ -126,7 +126,7 @@ class Slider {
     createEventKeydown() {
         document.addEventListener('keydown', (event) => {
             let scrollTop = parseInt($(window).scrollTop());
-            if (scrollTop < $('#mapleaf').offset().top) {
+            if (scrollTop < $('#map').offset().top) {
                 if (event.keyCode === 37) {
                     this.plusSlides(-1);
                     clearInterval(this.intervalId);

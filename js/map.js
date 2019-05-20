@@ -22,7 +22,6 @@ class ResaMap {
             id: 'mapbox.streets',
             accessToken: 'pk.eyJ1IjoianVsaWVuYmFycmUiLCJhIjoiY2pwdjdoM3o2MGRhdzN4czRmZW5ycTZuMSJ9.yILbOpuKdhUGZDaLt3PbDg'
         }).addTo(this.myMap);
-        this.checkResa();
         this.createMarkers();
     }
     
@@ -52,45 +51,49 @@ class ResaMap {
                         .openOn(this.myMap);
                     this.hud.infoNom.textContent = 'Nom de la station : ' + station.name;                    
                     this.hud.infoAdresse.textContent = 'Adresse : ' + station.address;                    
-                    this.hud.infoPlace.textContent = station.bike_stands + ' places';                    
-                    if (station.name === localStorage.nomstation) {
-                        this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';
-                    } else {
-                        this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
-                    }                    
+                    this.hud.infoPlace.textContent = station.bike_stands + ' places';
+                    this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
                     $('#resa').css({
                         display : 'block'
                     });
-                    let onResaClick = () => {
-                        if (station.available_bikes === 0){
-                            this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
-                            console.log('Aucun vélo disponible, réservation impossible.');
-                        } else {
-                            localStorage.setItem('nomstation', station.name);
-                            localStorage.setItem('velos', station.available_bikes);
-                            this.submitResa();
-                            $(this.hud.inputSubmit).css({
-                                display : 'none'
-                            });
-                            $(this.resaHud.inputCancel).css({
-                                display : 'block'
-                            });
-                        }
-                        console.log(localStorage);
-                    };
-                    $(this.hud.inputSubmit).on('click', onResaClick);
                 }
                 marker.on('click', onMarkerClick);                
             });
         });
         this.createHUD();
-    }    
+        this.reserver();
+    }
+    
+    reserver() {
+        let onResaClick = () => {
+            if (station.available_bikes === 0){
+                this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
+                alert('Aucun vélo disponible, réservation impossible.');
+            } else {
+                sessionStorage.setItem('nomstation', station.name);
+                sessionStorage.setItem('velos', station.available_bikes);
+                this.submitResa();
+                $(this.hud.inputSubmit).css({
+                    display : 'none'
+                });
+                $('#signature').css({
+                    display : 'none'
+                });
+                $(this.resaHud.inputCancel).css({
+                    display : 'block'
+                });
+            }
+            console.log(localStorage);
+            console.log(sessionStorage);
+        }
+        $(this.hud.inputSubmit).on('click', onResaClick);
+    }
     
     submitResa() {
         this.sauvegarde();
-        localStorage.velos -= 1;
-        this.hud.infoVelo.textContent = localStorage.velos + ' vélos disponibles';
-        this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + localStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
+        sessionStorage.velos -= 1;
+        this.hud.infoVelo.textContent = sessionStorage.velos + ' vélos disponibles';
+        this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + sessionStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
         $(this.resaHud.infoResa).css({
             display: 'block'
         });
@@ -129,18 +132,6 @@ class ResaMap {
         }
         this.intervalId = setInterval(diminuerCompteur, 1000);
     }
-    
-    checkResa() {
-        if (localStorage.reservation === 1) {
-            $(this.resaHud.infoResa).css({
-                display: 'block'
-            });
-        } else {
-            $(this.resaHud.infoResa).css({
-                display: 'none'
-            });
-        }
-    }
         
     createHUD() {
         this.hud.infoStation = $('#infostation');
@@ -173,6 +164,8 @@ class ResaMap {
         this.hud.inputNom = document.createElement('input');
         this.hud.inputNom.type = "text";
         this.hud.inputNom.id = "nom";
+        this.hud.inputNom.pattern = "[A-Za-z].{2,}";
+        this.hud.inputNom.title = "Deux lettres minimum.";
         this.hud.labelNom = document.createElement('label');
         this.hud.labelNom.htmlFor = "nom";
         this.hud.labelNom.innerHTML = "Nom : ";
@@ -185,6 +178,8 @@ class ResaMap {
         this.hud.inputPrenom = document.createElement('input');
         this.hud.inputPrenom.type = "text";
         this.hud.inputPrenom.id = "prenom";
+        this.hud.inputPrenom.pattern = "[A-Za-z].{2,}";
+        this.hud.inputPrenom.title = "Deux lettres minimum.";
         this.hud.labelPrenom = document.createElement('label');
         this.hud.labelPrenom.htmlFor = "prenom";
         this.hud.labelPrenom.innerHTML = "Prénom : ";
@@ -193,6 +188,26 @@ class ResaMap {
         
         this.hud.sautLigne = document.createElement('br');
         $(this.hud.sautLigne).appendTo(this.hud.form);
+        
+        this.hud.inputValidate = document.createElement('input');
+        this.hud.inputValidate.type = "button";
+        this.hud.inputValidate.value = "Valider Nom et Prénom";
+        this.hud.inputValidate.id = "valider";
+        $(this.hud.inputValidate).appendTo(this.hud.form).addClass('form');
+        
+        let onValidateClick = () => {
+            if ((document.getElementById('nom').value.length < 2) || (document.getElementById('prenom').value.length < 2)) {
+                alert('Les Champs "Nom" et "Prénom" doivent être rempli par au moins deux caractères.');
+            } else {
+                $('#signature').css({
+                    display : 'block'
+                });
+                $('#valider').css({
+                    display : 'none'
+                });
+            }
+        }
+        $(this.hud.inputValidate).on('click', onValidateClick);
         
         this.hud.inputSubmit = document.createElement('input');
         this.hud.inputSubmit.type = "button";
@@ -225,8 +240,16 @@ class ResaMap {
         $(this.resaHud.inputCancel).appendTo(this.resaHud.infoResa).addClass('cancel');
         
         let onCancelClick = () => {
+            this.activeResa--;
             localStorage.clear();
-            document.location.reload(true);
+            sessionStorage.clear();
+            clearInterval(this.intervalId);
+            $(this.resaHud.infoResa).css({
+                display: 'none'
+            });
+            $('#valider').css({
+                display : 'block'
+            });
         }
         $(this.resaHud.inputCancel).on('click', onCancelClick);
     }  

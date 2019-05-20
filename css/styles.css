@@ -13,7 +13,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     background-color : gainsboro;
-    max-width: 1000px;
+    max-width: 1500px;
     position: relative;
 }
 
@@ -172,6 +172,7 @@ figcaption {
 
 #signature {
     border: 1px solid black;
+    display: none;
 }
 
 #resa {
@@ -194,6 +195,11 @@ figcaption {
 
 #reserver {
     cursor: pointer;
+    display: none;
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
 }
 .cancel {
     cursor: pointer;

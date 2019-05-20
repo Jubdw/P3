@@ -3,6 +3,7 @@ class ResaCanvas {
         this.signature = {};
         this.context = null;
         this.paint = null;
+        this.validate = null;
         this.createSignature();
     }
 
@@ -29,7 +30,13 @@ class ResaCanvas {
             if (this.paint) {
                 this.context.lineTo(e.offsetX, e.offsetY);
                 this.context.stroke();
+                this.validate = true;
                 }
+            if (this.validate) {
+                $('#reserver').css({
+                    display : 'block'
+                });
+            }
         }        
         this.signature.canv.onmouseout = (e) => {
             this.paint = false;
