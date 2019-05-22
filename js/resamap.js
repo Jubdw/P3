@@ -1,5 +1,5 @@
 class ResaMap {
-    constructor() {
+    constructor(stations) {
         this.myMap = null;
         this.percent = null;
         this.iconList = null;
@@ -8,6 +8,7 @@ class ResaMap {
         this.activeResa = 0;
         this.intervalId = null;
         this.myMap = L.map('mapleaf').setView([47.214547, -1.552943], 15);
+        this.stations = stations;
         this.createContent();
     }
     
@@ -27,12 +28,12 @@ class ResaMap {
     }
     
     createMarkers() {
-        stations.forEach((station) => {
+        this.stations.forEach((station) => {
             this.percent = station.available_bikes / station.bike_stands * 100;
             this.chooseIcon();
             let myIcon = L.icon({
                 iconUrl: this.iconList,
-                iconSize: [32, 50],
+                iconSize: [37.9, 60],
                 iconAnchor: [16, 50],
                 popupAnchor: [-16, -45]
             });
@@ -61,7 +62,7 @@ class ResaMap {
     
     reserver() {
         let onResaClick = () => {
-            if (sessionStorage.velos === 0){
+            if (sessionStorage.velos <= 0){
                 this.hud.infoVelo.textContent = sessionStorage.velos + ' vélos disponibles';
                 alert('Aucun vélo disponible, réservation impossible.');
             } else {
@@ -70,6 +71,9 @@ class ResaMap {
                     display : 'none'
                 });
                 $('#signature').css({
+                    display : 'none'
+                });
+                $('#valider').css({
                     display : 'none'
                 });
                 $(this.resaHud.inputCancel).css({
@@ -171,7 +175,7 @@ class ResaMap {
         this.hud.inputPrenom = document.createElement('input');
         this.hud.inputPrenom.type = "text";
         this.hud.inputPrenom.id = "prenom";
-        this.hud.inputPrenom.pattern = "[A-Za-z].{2,}";
+        this.hud.inputPrenom.pattern = /[A-Za-z].{2,}/;
         this.hud.inputPrenom.title = "Deux lettres minimum.";
         this.hud.labelPrenom = document.createElement('label');
         this.hud.labelPrenom.htmlFor = "prenom";
@@ -191,10 +195,16 @@ class ResaMap {
         let onValidateClick = () => {
             if ((document.getElementById('nom').value.length < 2) || (document.getElementById('prenom').value.length < 2)) {
                 alert('Les Champs "Nom" et "Prénom" doivent être rempli par au moins deux caractères.');
-            } else {
-                $('#signature').css({
-                    display : 'block'
+            } else if (document.getElementById('signature')) {
+                let canv = document.getElementById('signature');
+                let divParent = document.getElementById('infostation');
+                divParent.removeChild(canv);
+                const signature = new ResaCanvas();
+                $('#valider').css({
+                    display : 'none'
                 });
+            } else {
+                const signature = new ResaCanvas();
                 $('#valider').css({
                     display : 'none'
                 });

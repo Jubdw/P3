@@ -1,6 +1,7 @@
 class Slider {
-    constructor() {
-        this.slideDiv = null;
+    constructor(slideDiv, images) {
+        this.slideDiv = slideDiv;
+        this.images = images;
         this.slideIndex = 0;
         this.slides = null;
         this.dots = null;
@@ -8,13 +9,7 @@ class Slider {
         this.next = null;
         this.stop = null;
         this.play = null;
-        this.images = null;
         this.intervalId = null;
-    }
-    
-    init(slideDiv, images) {
-        this.slideDiv = slideDiv;
-        this.images = images;
         this.createContent();
         this.createEventButton();
         this.createEventKeydown();

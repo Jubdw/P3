@@ -179,7 +179,6 @@ figcaption {
 
 #signature {
     border: 1px solid black;
-    display: none;
     position: absolute;
     bottom: 15%;
     left: 50%;
