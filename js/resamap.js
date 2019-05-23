@@ -80,8 +80,6 @@ class ResaMap {
                     display : 'block'
                 });
             }
-            console.log(localStorage);
-            console.log(sessionStorage);
         }
         $(this.hud.inputSubmit).on('click', onResaClick);
     }
@@ -161,8 +159,7 @@ class ResaMap {
         this.hud.inputNom = document.createElement('input');
         this.hud.inputNom.type = "text";
         this.hud.inputNom.id = "nom";
-        this.hud.inputNom.pattern = "[A-Za-z].{2,}";
-        this.hud.inputNom.title = "Deux lettres minimum.";
+        this.hud.inputNom.title = "Votre nom. Deux lettres minimum.";
         this.hud.labelNom = document.createElement('label');
         this.hud.labelNom.htmlFor = "nom";
         this.hud.labelNom.innerHTML = "Nom : ";
@@ -175,8 +172,7 @@ class ResaMap {
         this.hud.inputPrenom = document.createElement('input');
         this.hud.inputPrenom.type = "text";
         this.hud.inputPrenom.id = "prenom";
-        this.hud.inputPrenom.pattern = /[A-Za-z].{2,}/;
-        this.hud.inputPrenom.title = "Deux lettres minimum.";
+        this.hud.inputPrenom.title = "Votre prénom. Deux lettres minimum.";
         this.hud.labelPrenom = document.createElement('label');
         this.hud.labelPrenom.htmlFor = "prenom";
         this.hud.labelPrenom.innerHTML = "Prénom : ";
@@ -193,8 +189,15 @@ class ResaMap {
         $(this.hud.inputValidate).appendTo(this.hud.form).addClass('form');
         
         let onValidateClick = () => {
+            let reg = /\W/ig;
+            let iPrenom = document.getElementById('prenom').value;
+            let iNom = document.getElementById('nom').value;
+            let reg1 = reg.test(iPrenom);
+            let reg2 = reg.test(iNom);
             if ((document.getElementById('nom').value.length < 2) || (document.getElementById('prenom').value.length < 2)) {
                 alert('Les Champs "Nom" et "Prénom" doivent être rempli par au moins deux caractères.');
+            } else if ((reg1) || (reg2)) {
+                alert("Aucun chiffre ou caractère spécial accepté. Uniquement des lettres, pas d'accent ou de tiret.");
             } else if (document.getElementById('signature')) {
                 let canv = document.getElementById('signature');
                 let divParent = document.getElementById('infostation');
