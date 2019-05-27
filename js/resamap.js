@@ -1,6 +1,5 @@
 class ResaMap {
     constructor(stations) {
-        this.myMap = null;
         this.percent = null;
         this.iconList = null;
         this.hud = {};
@@ -11,7 +10,7 @@ class ResaMap {
         this.stations = stations;
         this.createContent();
     }
-    
+    // Affichage de la carte
     createContent() {
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -21,12 +20,12 @@ class ResaMap {
         }).addTo(this.myMap);
         this.createMarkers();
     }
-    
+    // Choix de l'icône en fonction du nombre de vélos disponibles => markers plus ou moins remplis
     chooseIcon() {
         let allIcons = ['images/marker_empty_0.png', 'images/marker_20.png', 'images/marker_40.png', 'images/marker_60.png', 'images/marker_80.png', 'images/marker_100.png']
         this.iconList = allIcons[Math.round(this.percent/20)]
     }
-    
+    // Ajout des markers aux emplacements des stations, ajout des informations relatives au stations suite à un clic sur un marker
     createMarkers() {
         this.stations.forEach((station) => {
             this.percent = station.available_bikes / station.bike_stands * 100;
@@ -59,7 +58,7 @@ class ResaMap {
         this.createHUD();
         this.reserver();
     }
-    
+    // Fonction de réservation, au clic sur le bouton 'réserver' => effacement du bouton de validation des input nom et prenom et du canvas pour la signature
     reserver() {
         let onResaClick = () => {
             if (sessionStorage.velos <= 0){
@@ -83,7 +82,7 @@ class ResaMap {
         }
         $(this.hud.inputSubmit).on('click', onResaClick);
     }
-    
+    // Sauvegarde des informations de réservation, lancement du chrono
     submitResa() {
         this.sauvegarde();
         sessionStorage.velos -= 1;
@@ -94,14 +93,13 @@ class ResaMap {
         });
         this.startChrono();
     }
-    
     sauvegarde() {
         this.activeResa++;
         localStorage.setItem('reservation', this.activeResa);
         localStorage.setItem('nom', document.getElementById('nom').value);
         localStorage.setItem('prenom', document.getElementById('prenom').value);
     }
-    
+    // Chrono de 20min pour la réservation, effacement de celui-ci et fin de réservation au bout des 20min
     startChrono() {
         let timerMinute = 20;
         let timerSeconde = 0;
@@ -123,11 +121,12 @@ class ResaMap {
                         });
                 }, 10000);
                 localStorage.clear;
+                sessionStorage.clear;
             }
         }
         this.intervalId = setInterval(diminuerCompteur, 1000);
     }
-        
+    // Création de la fenêtre des infos relatives aux stations, des inputs et boutons 'valider' et 'réserver'
     createHUD() {
         this.hud.infoStation = $('#infostation');
 
@@ -188,6 +187,7 @@ class ResaMap {
         this.hud.inputValidate.id = "valider";
         $(this.hud.inputValidate).appendTo(this.hud.form).addClass('form');
         
+        // Utilisation d'une Regex pour valider les input => acceptation de lettres uniquement, refus des caractères spéciaux et des chiffres. Deux caractères minimum.
         let onValidateClick = () => {
             let reg = /\W/ig;
             let iPrenom = document.getElementById('prenom').value;
@@ -198,6 +198,7 @@ class ResaMap {
                 alert('Les Champs "Nom" et "Prénom" doivent être rempli par au moins deux caractères.');
             } else if ((reg1) || (reg2)) {
                 alert("Aucun chiffre ou caractère spécial accepté. Uniquement des lettres, pas d'accent ou de tiret.");
+            // Si une réservation à déjà été validée puis annulée, effacement du canvas pour en afficher un nouveau
             } else if (document.getElementById('signature')) {
                 let canv = document.getElementById('signature');
                 let divParent = document.getElementById('infostation');
@@ -226,7 +227,7 @@ class ResaMap {
         
         this.createResaHud();
     }
-    
+    // Création de la fenêtre de réservation validée, ajout d'un bouton 'annuler'
     createResaHud() {
         this.resaHud.infoResa = $('#inforesa');
         
@@ -245,6 +246,7 @@ class ResaMap {
         this.resaHud.inputCancel.value = "Annuler";
         $(this.resaHud.inputCancel).appendTo(this.resaHud.infoResa).addClass('cancel');
         
+        // Si annulation d'une réservation, effacement des données enregistrées, du chrono et de la fenêtre de réservation, et mise à jour de la fenêtre d'infos sur les stations
         let onCancelClick = () => {
             this.activeResa--;
             sessionStorage.velos++;

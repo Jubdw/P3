@@ -17,7 +17,7 @@ class Slider {
         this.showSlides(this.slideIndex);
         this.createEventAutoPlay();
     }
-    
+    // Création du slider
     createContent() {
         let divContainer = document.createElement('div');
         let divPagination = document.createElement('div');
@@ -25,7 +25,7 @@ class Slider {
         divContainer.classList.add('container');
         divPagination.classList.add('pagination');
         
-        
+    // Pour chaque images contenu dans le tableau 'images' du fichier app.js, création de tous les éléments nécessaires
         for (let i = 0; i < $(this.images).length; i++) {
             let divSlide = document.createElement('figure');
             let slideImg = document.createElement('img');
@@ -55,7 +55,7 @@ class Slider {
         this.dots = $('.dot');
         
       
-    // Boutons  next, prev, stop, play //
+    // Création des boutons  next, prev, stop, play
         
         let aPrev = document.createElement('a');
         aPrev.classList.add('prev');
@@ -86,10 +86,12 @@ class Slider {
         
     }
     
+    // Défilement auto du slider, toutes les 5s
     createEventAutoPlay() {
         this.intervalId = setInterval( () => {this.plusSlides(1);}, 5000);
     }
     
+    // Avancement du slider au clic sur le point de l'image concernée via son index dans le tableau et fin du défilement auto
     createEventDot() {
         for (let i = 0; i < this.dots.length; i++) {
             this.dots[i].addEventListener('click', () => {
@@ -99,6 +101,7 @@ class Slider {
         }
     }
     
+    // Avancement ou recul de une image pour les boutons next et prev et arrêt du défilement auto, arrêt du défilement auto au bouton stop et reprise au bouton play
     createEventButton() {
         this.prev.on('click', () => {
             this.plusSlides(-1);
@@ -115,7 +118,8 @@ class Slider {
             this.createEventAutoPlay();
         });
     }
-
+    
+    // Si le slider est visible à l'écran, les touches flèches directionnelles permettent d'avancer et de reculer
     createEventKeydown() {
         document.addEventListener('keydown', (event) => {
             let scrollTop = parseInt($(window).scrollTop());
@@ -132,15 +136,15 @@ class Slider {
         });
     }
     
-    
+    // On avance ou recul vers l'image concernée
     plusSlides(n) {
         this.showSlides(this.slideIndex += n);
     }
-
+    // On se dirige vers l'image choisie par son index
     currentSlide(n) {
         this.showSlides(this.slideIndex = n);
     }
-
+    // Permet d'afficher une seule image à la fois, celle qui doit être affichée. Si on dépasse le nombre d'images présentes dans le slider, retour à la 1ère slide.
     showSlides(n) {
         let i;
         if (n > this.slides.length - 1) {
