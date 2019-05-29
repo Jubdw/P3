@@ -13,6 +13,7 @@ body {
     background-color : gainsboro;
     max-width: 1200px;
     position: relative;
+    border: 1px solid black;
 }
 
 img {
@@ -31,7 +32,7 @@ img {
     transform: translateY(-50%);
     width: auto;
     padding: 16px;
-    color: white;
+    color: black;
     font-weight: bold;
     font-size: 50px;
     transition: 0.6s ease;
@@ -80,10 +81,10 @@ figcaption {
 .stop, .play {
     cursor: pointer;
     position: absolute;
-    color: white;
+    color: black;
     left: 40%;
     transform: translateX(-50%);
-    bottom: 15%;
+    bottom: 25%;
     font-size: 50px;
     transition: 0.6s ease;
 }
@@ -94,6 +95,8 @@ figcaption {
 
 .stop:hover, .play:hover {
     transform: scale(1.5);
+    background-color: rgba(0,0,0,0.8);
+    color: white;
 }
 
 .active, .dot:hover {
@@ -165,7 +168,7 @@ figcaption {
 }
 
 .form {
-    text-align: center;
+    margin-left: 4px;
     margin-top: 4px;
     margin-bottom: 4px;
 }
@@ -173,7 +176,7 @@ figcaption {
 #valider {
     cursor: pointer;
     position: absolute;
-    top: 50%;
+    bottom: 35%;
     left: 50%;
     transform: translateX(-50%);
 }

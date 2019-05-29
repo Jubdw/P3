@@ -122,6 +122,21 @@ class ResaMap {
                 }, 10000);
                 localStorage.clear;
                 sessionStorage.clear;
+                $('#valider').css({
+                    display : 'block'
+                });
+                $(this.hud.inputNom).css({
+                    display : 'block'
+                });
+                $(this.hud.labelNom).css({
+                    display : 'block'
+                });
+                $(this.hud.inputPrenom).css({
+                    display : 'block'
+                });
+                $(this.hud.labelPrenom).css({
+                    display : 'block'
+                });
             }
         }
         this.intervalId = setInterval(diminuerCompteur, 1000);
@@ -159,6 +174,8 @@ class ResaMap {
         this.hud.inputNom.type = "text";
         this.hud.inputNom.id = "nom";
         this.hud.inputNom.title = "Votre nom. Deux lettres minimum.";
+        this.hud.sautLigne = document.createElement('br');
+        $(this.hud.sautLigne).appendTo(this.hud.form);
         this.hud.labelNom = document.createElement('label');
         this.hud.labelNom.htmlFor = "nom";
         this.hud.labelNom.innerHTML = "Nom : ";
@@ -172,6 +189,8 @@ class ResaMap {
         this.hud.inputPrenom.type = "text";
         this.hud.inputPrenom.id = "prenom";
         this.hud.inputPrenom.title = "Votre prénom. Deux lettres minimum.";
+        this.hud.sautLigne = document.createElement('br');
+        $(this.hud.sautLigne).appendTo(this.hud.form);
         this.hud.labelPrenom = document.createElement('label');
         this.hud.labelPrenom.htmlFor = "prenom";
         this.hud.labelPrenom.innerHTML = "Prénom : ";
@@ -189,7 +208,7 @@ class ResaMap {
         
         // Utilisation d'une Regex pour valider les input => acceptation de lettres uniquement, refus des caractères spéciaux et des chiffres. Deux caractères minimum.
         let onValidateClick = () => {
-            let reg = /\W/ig;
+            let reg = /[^a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]/ig;
             let iPrenom = document.getElementById('prenom').value;
             let iNom = document.getElementById('nom').value;
             let reg1 = reg.test(iPrenom);
@@ -197,7 +216,7 @@ class ResaMap {
             if ((document.getElementById('nom').value.length < 2) || (document.getElementById('prenom').value.length < 2)) {
                 alert('Les Champs "Nom" et "Prénom" doivent être rempli par au moins deux caractères.');
             } else if ((reg1) || (reg2)) {
-                alert("Aucun chiffre ou caractère spécial accepté. Uniquement des lettres, pas d'accent ou de tiret.");
+                alert("Aucun chiffre ou caractère spécial accepté. Uniquement des lettres.");
             // Si une réservation à déjà été validée puis annulée, effacement du canvas pour en afficher un nouveau
             } else if (document.getElementById('signature')) {
                 let canv = document.getElementById('signature');
@@ -207,9 +226,39 @@ class ResaMap {
                 $('#valider').css({
                     display : 'none'
                 });
+                $(this.hud.infoResa).css({
+                    display : 'none'
+                });
+                $(this.hud.inputNom).css({
+                    display : 'none'
+                });
+                $(this.hud.labelNom).css({
+                    display : 'none'
+                });
+                $(this.hud.inputPrenom).css({
+                    display : 'none'
+                });
+                $(this.hud.labelPrenom).css({
+                    display : 'none'
+                });
             } else {
                 const signature = new ResaCanvas();
                 $('#valider').css({
+                    display : 'none'
+                });
+                $(this.hud.infoResa).css({
+                    display : 'none'
+                });
+                $(this.hud.inputNom).css({
+                    display : 'none'
+                });
+                $(this.hud.labelNom).css({
+                    display : 'none'
+                });
+                $(this.hud.inputPrenom).css({
+                    display : 'none'
+                });
+                $(this.hud.labelPrenom).css({
                     display : 'none'
                 });
             }
@@ -246,7 +295,7 @@ class ResaMap {
         this.resaHud.inputCancel.value = "Annuler";
         $(this.resaHud.inputCancel).appendTo(this.resaHud.infoResa).addClass('cancel');
         
-        // Si annulation d'une réservation, effacement des données enregistrées, du chrono et de la fenêtre de réservation, et mise à jour de la fenêtre d'infos sur les stations
+        // Si annulation d'une réservation, effacement des données enregistrées, du chrono et de la fenêtre de réservation, mise à jour de la fenêtre d'infos sur les stations et retour des input 'nom' et 'prenom' et du bouton valider
         let onCancelClick = () => {
             this.activeResa--;
             sessionStorage.velos++;
@@ -257,6 +306,21 @@ class ResaMap {
                 display: 'none'
             });
             $('#valider').css({
+                display : 'block'
+            });
+            $(this.hud.infoResa).css({
+                display : 'block'
+            });
+            $(this.hud.inputNom).css({
+                display : 'block'
+            });
+            $(this.hud.labelNom).css({
+                display : 'block'
+            });
+            $(this.hud.inputPrenom).css({
+                display : 'block'
+            });
+            $(this.hud.labelPrenom).css({
                 display : 'block'
             });
         }

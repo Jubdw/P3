@@ -101,7 +101,7 @@ class Slider {
         }
     }
     
-    // Avancement ou recul de une image pour les boutons next et prev et arrêt du défilement auto, arrêt du défilement auto au bouton stop et reprise au bouton play
+    // Avancement ou recul d'une image pour les boutons next et prev et arrêt du défilement auto, arrêt du défilement auto au bouton stop et reprise au bouton play
     createEventButton() {
         this.prev.on('click', () => {
             this.plusSlides(-1);
@@ -119,7 +119,7 @@ class Slider {
         });
     }
     
-    // Si le slider est visible à l'écran, les touches flèches directionnelles permettent d'avancer et de reculer
+    // Si le slider est visible à l'écran, les touches flèches directionnelles droite et gauche permettent d'avancer et de reculer
     createEventKeydown() {
         document.addEventListener('keydown', (event) => {
             let scrollTop = parseInt($(window).scrollTop());
@@ -144,7 +144,7 @@ class Slider {
     currentSlide(n) {
         this.showSlides(this.slideIndex = n);
     }
-    // Permet d'afficher une seule image à la fois, celle qui doit être affichée. Si on dépasse le nombre d'images présentes dans le slider, retour à la 1ère slide.
+    // Permet d'afficher une seule image à la fois, celle qui doit être affichée, les autres sont comme la poulette de Kadoc : bien cachées. Si on dépasse le nombre d'images présentes dans le slider, retour à la 1ère slide.
     showSlides(n) {
         let i;
         if (n > this.slides.length - 1) {
