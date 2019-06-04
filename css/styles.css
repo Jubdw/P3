@@ -197,10 +197,9 @@ figcaption {
     display: none;
     position: absolute;
     bottom: 1%;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 20%;
-    width: 80%;
+    left: 2%;
+    height: 18%;
+    width: 96%;
     border: 1px solid black;
     border-radius: 2%;
     background-color: white;
@@ -223,3 +222,89 @@ figcaption {
     transform: translateX(-50%);
 }
 /* /////// END MAP ///// */
+
+/* /////// START MEDIA QUERIES ///// */
+
+@media only screen and (max-width: 1480px) {
+    #mapleaf {
+        height: 55%;
+        width: 96%;
+        left: 2%;
+    }
+    #infostation {
+        right: 2%;
+        bottom: 19%;
+        height: 20%;
+        width: 96%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    #valider {
+        bottom: 3%;
+        left: 90%;
+    }
+    #signature {
+        bottom: 15%;
+        left: 80%
+    }
+}
+@media only screen and (max-width: 1100px) {
+    #mapleaf {
+        height: 50%;
+    }
+    #infostation {
+        height: 25%;
+        font-size: 0.9em;
+    }
+    #signature {
+        left: 70%
+    }
+    #valider {
+        left: 80%;
+    }
+}
+@media only screen and (max-width: 700px) {
+    #infostation {
+        font-size: 0.7em;
+    }
+}
+@media only screen and (max-width: 640px) {
+    #mapleaf {
+        height: 33%;
+    }
+    #infostation {
+        height: 42%;
+    }
+    #valider {
+        left: 50%;
+    }
+    #signature {
+        bottom: 6%;
+        left: 55%
+    }
+    #reserver {
+        bottom: 1%;
+        left: 90%;
+    }
+}
+@media only screen and (max-width: 560px) {
+    #signature {
+        bottom: 5%;
+        left: 45%
+    }
+    .cancel {
+        bottom: 5%;
+    }
+}
+@media only screen and (max-width: 440px) {
+    #signature {
+        bottom: 6%;
+        left: 50%
+    }
+    #reserver {
+        bottom: 0%;
+        left: 50%;
+    }
+}
+/* /////// END MEDIA QUERIES ///// */
