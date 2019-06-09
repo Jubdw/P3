@@ -49,9 +49,17 @@ class ResaMap {
                 this.hud.infoVelo.textContent = station.available_bikes + ' vélos disponibles';
                 sessionStorage.setItem('nomstation', station.name);
                 sessionStorage.setItem('velos', station.available_bikes);
+                if (!sessionStorage.reservation) {
                 $('#resa').css({
-                    display : 'block'
+                    visibility : 'visible'
                 });
+                $(this.hud.infoResa).css({
+                    visibility : 'visible'
+                });
+                $('#valider').css({
+                    visibility : 'visible'
+                });
+                }
             }
             marker.on('click', onMarkerClick);
         });
@@ -67,16 +75,19 @@ class ResaMap {
             } else {
                 this.submitResa();
                 $(this.hud.inputSubmit).css({
-                    display : 'none'
+                    visibility : 'hidden'
                 });
                 $('#signature').css({
-                    display : 'none'
+                    visibility : 'hidden'
+                });
+                $(this.hud.infoResa).css({
+                    visibility : 'hidden'
                 });
                 $('#valider').css({
-                    display : 'none'
+                    visibility : 'hidden'
                 });
                 $(this.resaHud.inputCancel).css({
-                    display : 'block'
+                    visibility : 'visible'
                 });
             }
         }
@@ -89,21 +100,24 @@ class ResaMap {
         this.hud.infoVelo.textContent = sessionStorage.velos + ' vélos disponibles';
         this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + sessionStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
         $(this.resaHud.infoResa).css({
-            display: 'block'
+            visibility : 'visible'
         });
-        this.startChrono();
+        $(this.resaHud.inputCancel).css({
+            visibility : 'visible'
+        });
+        this.startChrono(20, 0);
     }
     sauvegarde() {
         this.activeResa++;
-        localStorage.setItem('reservation', this.activeResa);
+        sessionStorage.setItem('reservation', this.activeResa);
         localStorage.setItem('nom', document.getElementById('nom').value);
         localStorage.setItem('prenom', document.getElementById('prenom').value);
     }
     // Chrono de 20min pour la réservation, effacement de celui-ci et fin de réservation au bout des 20min
-    startChrono() {
-        let timerMinute = 20;
-        let timerSeconde = 0;
+    startChrono(timerMinute, timerSeconde) {
         let diminuerCompteur = () => {
+            sessionStorage.setItem('minute', timerMinute);
+            sessionStorage.setItem('seconde', timerSeconde);
             this.resaHud.resaTimer.textContent = 'Temps restant : ' + timerMinute + ' minute(s) ' + timerSeconde + ' seconde(s).';
             if (timerSeconde >= 0) {
                 timerSeconde--;
@@ -117,26 +131,20 @@ class ResaMap {
                 clearInterval(this.intervalId);
                 setTimeout( () => {
                     $(this.resaHud.infoResa).css({
-                            display: 'none'
-                        });
+                        visibility : 'hidden'
+                    });
+                    $(this.resaHud.inputCancel).css({
+                        visibility : 'hidden'
+                    });
+                    $('#valider').css({
+                        visibility : 'visible'
+                    });
+                    $('#resa').css({
+                        visibility : 'visible'
+                    });
                 }, 10000);
                 localStorage.clear;
                 sessionStorage.clear;
-                $('#valider').css({
-                    display : 'block'
-                });
-                $(this.hud.inputNom).css({
-                    display : 'block'
-                });
-                $(this.hud.labelNom).css({
-                    display : 'block'
-                });
-                $(this.hud.inputPrenom).css({
-                    display : 'block'
-                });
-                $(this.hud.labelPrenom).css({
-                    display : 'block'
-                });
             }
         }
         this.intervalId = setInterval(diminuerCompteur, 1000);
@@ -161,12 +169,15 @@ class ResaMap {
         this.hud.infoVelo = document.createElement('p');
         $(this.hud.infoVelo).appendTo(this.hud.infoStation).addClass('info');
         
-        this.hud.infoResa = document.createElement('p');
-        this.hud.infoResa.textContent = 'Réservez un vélo :';
-        $(this.hud.infoResa).appendTo(this.hud.infoStation).addClass('titre');
+        this.hud.sautLigne = document.createElement('br');
+        $(this.hud.sautLigne).appendTo(this.hud.infoStation);
         
         this.hud.reservation = document.createElement('div');
         this.hud.reservation.id = "resa";
+        
+        this.hud.infoResa = document.createElement('p');
+        this.hud.infoResa.textContent = 'Réservez un vélo :';
+        $(this.hud.infoResa).appendTo(this.hud.reservation).addClass('titre');
         
         this.hud.form = document.createElement('form');
         
@@ -197,9 +208,6 @@ class ResaMap {
         $(this.hud.labelPrenom).appendTo(this.hud.form).addClass('form');
         $(this.hud.inputPrenom).appendTo(this.hud.form).addClass('form');
         
-        this.hud.sautLigne = document.createElement('br');
-        $(this.hud.sautLigne).appendTo(this.hud.form);
-        
         this.hud.inputValidate = document.createElement('input');
         this.hud.inputValidate.type = "button";
         this.hud.inputValidate.value = "Valider Nom et Prénom";
@@ -224,42 +232,18 @@ class ResaMap {
                 divParent.removeChild(canv);
                 const signature = new ResaCanvas();
                 $('#valider').css({
-                    display : 'none'
+                    visibility : 'hidden'
                 });
-                $(this.hud.infoResa).css({
-                    display : 'none'
-                });
-                $(this.hud.inputNom).css({
-                    display : 'none'
-                });
-                $(this.hud.labelNom).css({
-                    display : 'none'
-                });
-                $(this.hud.inputPrenom).css({
-                    display : 'none'
-                });
-                $(this.hud.labelPrenom).css({
-                    display : 'none'
+                $('#resa').css({
+                    visibility : 'hidden'
                 });
             } else {
                 const signature = new ResaCanvas();
                 $('#valider').css({
-                    display : 'none'
+                    visibility : 'hidden'
                 });
-                $(this.hud.infoResa).css({
-                    display : 'none'
-                });
-                $(this.hud.inputNom).css({
-                    display : 'none'
-                });
-                $(this.hud.labelNom).css({
-                    display : 'none'
-                });
-                $(this.hud.inputPrenom).css({
-                    display : 'none'
-                });
-                $(this.hud.labelPrenom).css({
-                    display : 'none'
+                $('#resa').css({
+                    visibility : 'hidden'
                 });
             }
         }
@@ -273,7 +257,6 @@ class ResaMap {
         
         $(this.hud.form).appendTo(this.hud.reservation).addClass('form');
         $(this.hud.reservation).appendTo(this.hud.infoStation).addClass('form');
-        
         this.createResaHud();
     }
     // Création de la fenêtre de réservation validée, ajout d'un bouton 'annuler'
@@ -295,35 +278,42 @@ class ResaMap {
         this.resaHud.inputCancel.value = "Annuler";
         $(this.resaHud.inputCancel).appendTo(this.resaHud.infoResa).addClass('cancel');
         
-        // Si annulation d'une réservation, effacement des données enregistrées, du chrono et de la fenêtre de réservation, mise à jour de la fenêtre d'infos sur les stations et retour des input 'nom' et 'prenom' et du bouton valider
+        // Si annulation d'une réservation, effacement des données enregistrées, du chrono et de la fenêtre de réservation et effacement des infos station => retour au choix de station
         let onCancelClick = () => {
             this.activeResa--;
-            sessionStorage.velos++;
-            this.hud.infoVelo.textContent = sessionStorage.velos + ' vélos disponibles';
             localStorage.clear();
+            sessionStorage.clear();
             clearInterval(this.intervalId);
+            this.hud.infoVelo.textContent = '';
+            this.hud.infoPlace.textContent = '';
+            this.hud.infoAdresse.textContent = '';
+            this.hud.infoNom.textContent = '';
             $(this.resaHud.infoResa).css({
-                display: 'none'
+                visibility : 'hidden'
+            });
+            $(this.resaHud.inputCancel).css({
+                visibility : 'hidden'
             });
             $('#valider').css({
-                display : 'block'
+                visibility : 'hidden'
             });
-            $(this.hud.infoResa).css({
-                display : 'block'
-            });
-            $(this.hud.inputNom).css({
-                display : 'block'
-            });
-            $(this.hud.labelNom).css({
-                display : 'block'
-            });
-            $(this.hud.inputPrenom).css({
-                display : 'block'
-            });
-            $(this.hud.labelPrenom).css({
-                display : 'block'
+            $('#resa').css({
+                visibility : 'hidden'
             });
         }
         $(this.resaHud.inputCancel).on('click', onCancelClick);
-    }  
+        
+        // Si une réservation est active, on affiche les infos de résa et le timer au chargement de la page
+        if (sessionStorage.reservation) {
+            $(this.resaHud.infoResa).css({
+                visibility : 'visible'
+            });
+            this.resaHud.resaData.textContent = 'Vélo réservé à la station ' + sessionStorage.nomstation + ' par ' + localStorage.prenom + ' ' + localStorage.nom;
+            this.startChrono(sessionStorage.minute, sessionStorage.seconde);
+        } else {
+            $(this.resaHud.infoResa).css({
+                visibility : 'hidden'
+            });
+        }
+    }
 }

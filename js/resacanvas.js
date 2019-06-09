@@ -37,7 +37,7 @@ class ResaCanvas {
                 }
             if (this.validate) {
                 $('#reserver').css({
-                    display : 'block'
+                    visibility : 'visible'
                 });
             }
         }

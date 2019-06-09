@@ -12,8 +12,8 @@ const images = [
     {url : 'images/10-resavalide.png', alt : 'Votre réservation est validée', title : 'Votre réservation est validée'},
     {url : 'images/11-annuler.png', alt : 'Annuler la réservation', title : 'Annuler la réservation'},
     {url : 'images/12-annulerretour.png', alt : 'Retour au choix de station', title : 'Retour au choix de station'},
-    {url : 'images/13-finresa.png', alt : 'La réservation dure 20 mintes', title : 'La réservation dure 20 mintes'},
-    {url : 'images/14-unefois.png', alt : 'Lorsque la réservation est validée', title : 'Lorsque la réservation est validée'},
+    {url : 'images/13-retour2.png', alt : 'Choississez une nouvelle station', title : 'Choississez une nouvelle station'},
+    {url : 'images/14-finresa.png', alt : 'La réservation dure 20 mintes', title : 'La réservation dure 20 mintes'},
     {url : 'images/15-prenez.jpg', alt : 'Le vélo vous attend à la station', title : 'Le vélo vous attend à la station'}
 ]
 // Création du slider avec le tableau d'images en paramètre

@@ -1,5 +1,5 @@
 body {
-    background-color : lightblue;
+    background-color : rgb(250,250,250);
     font-family: Verdana, sans-serif;
     margin: 0;
 }
@@ -11,9 +11,9 @@ body {
     left: 50%;
     transform: translateX(-50%);
     background-color : gainsboro;
-    max-width: 1200px;
+    max-width: 1400px;
     position: relative;
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 img {
@@ -84,7 +84,7 @@ figcaption {
     color: black;
     left: 40%;
     transform: translateX(-50%);
-    bottom: 25%;
+    bottom: 6%;
     font-size: 50px;
     transition: 0.6s ease;
 }
@@ -138,7 +138,7 @@ figcaption {
     margin-bottom: 20px;
     height: 75%;
     width: 70%;
-    border: 1px solid black;
+    border: 2px solid black;
     border-radius: 1%;
 }
 
@@ -149,7 +149,7 @@ figcaption {
     margin-bottom: 20px;
     height: 75%;
     width: 21%;
-    border: 1px solid black;
+    border: 2px solid black;
     border-radius: 2%;
     background-color: white;
 }
@@ -161,10 +161,14 @@ figcaption {
 
 .info {
     margin-left: 6px;
+    margin-block-start: 2px;
+    margin-block-end: 2px;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
 }
 
 .compt {
-    display: none;
+    visibility : hidden;
 }
 
 .form {
@@ -190,17 +194,16 @@ figcaption {
 }
 
 #resa {
-    display: none;
+    visibility : hidden;
 }
 
 #inforesa {
-    display: none;
     position: absolute;
     bottom: 1%;
     left: 2%;
     height: 18%;
     width: 96%;
-    border: 1px solid black;
+    border: 2px solid black;
     border-radius: 2%;
     background-color: white;
     text-align: center;
@@ -208,7 +211,7 @@ figcaption {
 
 #reserver {
     cursor: pointer;
-    display: none;
+    visibility : hidden;
     position: absolute;
     bottom: 2%;
     left: 50%;
@@ -262,11 +265,6 @@ figcaption {
     }
     #valider {
         left: 80%;
-    }
-}
-@media only screen and (max-width: 700px) {
-    #infostation {
-        font-size: 0.7em;
     }
 }
 @media only screen and (max-width: 640px) {
